@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tranthcriber - AI Audio & Video Transcription</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* A very light gray */
+        }
+        /* Hide default file input */
+        #media-file {
+            display: none;
+        }
+    </style>
+</head>
+<body class="h-full text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
+        <!-- Header / Navigation -->
+        <header class="bg-white shadow-sm">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-auto text-indigo-600" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.25 5.25a3 3 0 013-3h13.5a3 3 0 013 3v13.5a3 3 0 01-3 3H5.25a3 3 0 01-3-3V5.25zm3.75.75v12h10.5V6H6zm1.5 1.5a.75.75 0 000 1.5h7.5a.75.75 0 000-1.5H7.5zm0 3a.75.75 0 000 1.5h7.5a.75.75 0 000-1.5H7.5zm0 3a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5H7.5z" clip-rule="evenodd"></path></svg>
+                        <span class="ml-2 text-2xl font-bold text-gray-900">Tranthcriber</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                 <div class="text-center">
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+                        AI-Powered Media Transcription
+                    </h1>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-500">
+                        Effortlessly convert your audio and video files into accurate SRT subtitles.
+                    </p>
+                </div>
+    
+                <div class="mt-8 max-w-3xl mx-auto bg-white rounded-xl shadow-xl p-8 space-y-6">
+                    <form id="transcription-form">
+                        <!-- Language and Accent Selection -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="language" class="block text-sm font-medium text-gray-700">Language</label>
+                                <select id="language" name="language" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    <option value="en">English</option>
+                                    <option value="ar" selected>Arabic</option>
+                                </select>
+                            </div>
+                            <div id="accent-container">
+                                <label for="accent" class="block text-sm font-medium text-gray-700">Accent (for better accuracy)</label>
+                                <select id="accent" name="accent" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    <option value="general">General / Standard</option>
+                                    <option value="egyptian">Egyptian (مصر)</option>
+                                    <option value="jordanian">Jordanian (الأردن)</option>
+                                    <option value="saudi">Saudi (السعودية)</option>
+                                    <option value="gulf">Gulf (الخليج)</option>
+                                    <option value="levantine">Levantine (الشام)</option>
+                                    <option value="maghrebi">Maghrebi (المغرب العربي)</option>
+                                    <option value="iraqi">Iraqi (العراق)</option>
+                                    <option value="yemeni">Yemeni (اليمن)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- File Input -->
+                        <div id="drag-drop-area" class="mt-6 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer">
+                             <div class="flex flex-col items-center justify-center space-y-2">
+                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                <p id="drag-drop-text" class="text-gray-500"><span class="font-semibold text-indigo-600">Click to upload</span> or drag & drop</p>
+                                <p class="text-xs text-gray-400">Audio & Video Files (MP3, WAV, MP4, etc.)</p>
+                                <p id="file-name" class="text-sm font-medium text-gray-700 mt-2"></p>
+                            </div>
+                            <input id="media-file" name="audio_file" type="file" accept="audio/*,video/*">
+                        </div>
+
+                        <button type="submit" id="submit-button" class="mt-6 w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed">
+                            Transcribe File
+                        </button>
+                    </form>
+
+                    <!-- Results Section -->
+                    <div id="results-section" class="hidden pt-6 space-y-4">
+                        <h2 id="results-header" class="text-xl font-semibold text-gray-900 border-b pb-2">Processing...</h2>
+                        <div id="progress-container" class="w-full bg-gray-200 rounded-full h-4">
+                            <div id="progress-bar" class="bg-indigo-600 h-4 rounded-full text-xs font-medium text-blue-100 text-center p-0.5 leading-none transition-all duration-500" style="width: 0%">0%</div>
+                        </div>
+                        <div id="error-message" class="hidden p-4 bg-red-100 text-red-700 rounded-md"></div>
+                        <div id="srt-output-container" class="hidden">
+                             <textarea id="srt-output" readonly class="w-full h-64 p-3 font-mono text-sm bg-gray-50 border border-gray-300 rounded-md"></textarea>
+                             <button id="download-button" class="mt-2 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">Download .SRT File</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white mt-12">
+            <div class="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+                <p>&copy; 2025 Tranthcriber. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- UI Element References ---
+        const languageSelect = document.getElementById('language');
+        const accentContainer = document.getElementById('accent-container');
+        const form = document.getElementById('transcription-form');
+        const mediaFileInput = document.getElementById('media-file');
+        const fileNameDisplay = document.getElementById('file-name');
+        const dragDropArea = document.getElementById('drag-drop-area');
+        const submitButton = document.getElementById('submit-button');
+        
+        const resultsSection = document.getElementById('results-section');
+        const resultsHeader = document.getElementById('results-header');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const errorMessage = document.getElementById('error-message');
+        
+        const srtOutputContainer = document.getElementById('srt-output-container');
+        const srtOutput = document.getElementById('srt-output');
+        const downloadButton = document.getElementById('download-button');
+
+        // --- Dynamic UI Logic ---
+        languageSelect.addEventListener('change', () => {
+            accentContainer.classList.toggle('hidden', languageSelect.value !== 'ar');
+        });
+
+        // --- Drag and Drop Logic ---
+        dragDropArea.addEventListener('click', () => mediaFileInput.click());
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dragDropArea.addEventListener(eventName, e => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dragDropArea.addEventListener(eventName, () => dragDropArea.classList.add('border-indigo-600', 'bg-indigo-50'));
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dragDropArea.addEventListener(eventName, () => dragDropArea.classList.remove('border-indigo-600', 'bg-indigo-50'));
+        });
+        dragDropArea.addEventListener('drop', e => {
+            mediaFileInput.files = e.dataTransfer.files;
+            updateFileName();
+        });
+        mediaFileInput.addEventListener('change', updateFileName);
+
+        function updateFileName() {
+            fileNameDisplay.textContent = mediaFileInput.files.length > 0 ? mediaFileInput.files[0].name : '';
+        }
+
+        // --- Form Submission ---
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (mediaFileInput.files.length === 0) {
+                alert('Please select a file.');
+                return;
+            }
+
+            // Reset UI and show progress
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
+            resultsSection.classList.remove('hidden');
+            progressContainer.classList.remove('hidden');
+            srtOutputContainer.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            resultsHeader.textContent = 'Processing...';
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+
+            // Simulate progress while uploading and preparing
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress = Math.min(progress + 5, 95); // Cap progress at 95%
+                progressBar.style.width = `${progress}%`;
+                progressBar.textContent = `${progress}%`;
+                if (progress >= 95) {
+                    clearInterval(progressInterval);
+                }
+            }, 200);
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch('/transcribe', {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                clearInterval(progressInterval);
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'An unknown server error occurred.');
+                }
+                
+                progressBar.style.width = '100%';
+                progressBar.textContent = '100%';
+                resultsHeader.textContent = 'Transcription Complete';
+                srtOutput.value = result.srt_transcription;
+                srtOutputContainer.classList.remove('hidden');
+                progressContainer.classList.add('hidden');
+
+            } catch (error) {
+                errorMessage.textContent = `Error: ${error.message}`;
+                errorMessage.classList.remove('hidden');
+                progressContainer.classList.add('hidden');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Transcribe File';
+            }
+        });
+
+        // --- Download Button Logic ---
+        downloadButton.addEventListener('click', () => {
+            const srtContent = srtOutput.value;
+            const originalFileName = mediaFileInput.files[0].name;
+            const baseName = originalFileName.substring(0, originalFileName.lastIndexOf('.')) || 'transcription';
+            const srtFileName = `${baseName}.srt`;
+
+            const blob = new Blob([srtContent], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = srtFileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    </script>
+</body>
+</html>
